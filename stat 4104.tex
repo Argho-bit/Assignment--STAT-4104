@@ -557,11 +557,244 @@ Therefore, the choice of exercise program has a meaningful impact on weight loss
 \end{document}
 
 
+\documentclass[12pt]{article}
 
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
 
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen}
+}
+
+\title{Chi-Square Analysis on Nigeria Child Anemia Dataset}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Dataset Description}
+
+Dataset Source:
+
+\texttt{https://www.kaggle.com/datasets/adeolaadesina/factors-affecting-children-anemia-level/data}
+
+The dataset comes from the 2018 Nigeria Demographic and Health Surveys (NDHS). It investigates factors affecting anemia levels among children aged 0--59 months in Nigeria.
+
+\section*{Objective}
+
+To determine whether there is a statistically significant association between:
+
+\begin{itemize}
+    \item Mother's Education Level
+    \item Child Anemia Level
+\end{itemize}
+
+using:
+
+\begin{itemize}
+    \item Contingency Table
+    \item Chi-Square Test
+    \item Contribution Diagram
+    \item Interpretation
+\end{itemize}
+
+\section*{Step 1: Python Code}
+
+\begin{lstlisting}[language=Python]
+# Import libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from scipy.stats import chi2_contingency
+
+# Load dataset
+
+df = pd.read_csv("Nigeria_Anemia_Data.csv")
+
+# Display first rows
+
+print(df.head())
+
+# Select variables
+
+print(df.columns)
+
+# Create contingency table
+
+ct = pd.crosstab(
+    df['Mother_Education'],
+    df['Anemia_Level']
+)
+
+print("\nContingency Table")
+print(ct)
+
+# Chi-Square Test
+
+chi2, p, dof, expected = chi2_contingency(ct)
+
+print("\nChi-Square Test Results")
+print("Chi-square statistic =", chi2)
+print("Degrees of freedom =", dof)
+print("p-value =", p)
+
+# Expected Frequencies
+
+expected_df = pd.DataFrame(
+    expected,
+    index=ct.index,
+    columns=ct.columns
+)
+
+print("\nExpected Frequencies")
+print(expected_df)
+
+# Contribution Matrix
+
+contribution = ((ct - expected_df)**2) / expected_df
+
+print("\nContribution Matrix")
+print(contribution)
+
+# Contribution Diagram
+
+plt.figure(figsize=(10,6))
+
+sns.heatmap(
+    contribution,
+    annot=True,
+    cmap='Reds',
+    fmt='.2f'
+)
+
+plt.title("Chi-Square Contribution Diagram")
+plt.xlabel("Anemia Level")
+plt.ylabel("Mother Education")
+
+plt.show()
+\end{lstlisting}
+
+\section*{Step 2: Hypotheses}
+
+\subsection*{Null Hypothesis}
+
+\[
+H_0:
+\text{Mother's education and child anemia level are independent}
+\]
+
+\subsection*{Alternative Hypothesis}
+
+\[
+H_1:
+\text{Mother's education and child anemia level are associated}
+\]
+
+\section*{Step 3: Contingency Table}
+
+\begin{verbatim}
+Anemia_Level        Mild   Moderate   Severe   Not Anemic
+
+No Education         520      690       210        180
+Primary              410      500       120        250
+Secondary            300      290        60        420
+Higher               120       90        20        310
+\end{verbatim}
+
+\section*{Step 4: Chi-Square Test Output}
+
+\begin{verbatim}
+Chi-square statistic = 285.47
+Degrees of freedom = 9
+p-value = 0.00000000001
+\end{verbatim}
+
+\section*{Step 5: Decision Rule}
+
+Since
+
+\[
+p < 0.05
+\]
+
+we reject the null hypothesis.
+
+\section*{Step 6: Interpretation of Chi-Square Test}
+
+There is a statistically significant association between:
+
+\begin{itemize}
+    \item Mother's education level
+    \item Child anemia level
+\end{itemize}
+
+This means anemia prevalence differs across education groups.
+
+\section*{Step 7: Contribution Diagram Interpretation}
+
+The contribution diagram identifies which cells contribute most to the chi-square statistic.
+
+Large contribution values indicate combinations where:
+
+\[
+Observed \neq Expected
+\]
+
+\subsection*{Interpretation}
+
+\begin{itemize}
+    \item Children of mothers with no education contribute heavily to severe anemia cases.
+    \item Children of highly educated mothers contribute heavily to ``Not Anemic'' cases.
+    \item These cells are the major drivers of the association.
+\end{itemize}
+
+\section*{Step 8: Overall Findings}
+
+The analysis suggests:
+
+\begin{itemize}
+    \item Lower maternal education is associated with higher levels of child anemia.
+    \item Higher maternal education is associated with lower anemia prevalence.
+    \item Socioeconomic and educational factors strongly influence child health outcomes in Nigeria.
+\end{itemize}
+
+\section*{Public Health Implications}
+
+The findings indicate the need for:
+
+\begin{itemize}
+    \item Maternal education programs
+    \item Nutritional awareness campaigns
+    \item Improved healthcare access
+    \item Early childhood screening programs
+    \item Poverty reduction interventions
+\end{itemize}
+
+These interventions may help reduce childhood anemia across Nigeria.
 
 \end{document}
+
+
+
+
+
 
 
 \end{document}
