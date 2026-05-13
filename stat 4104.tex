@@ -1186,7 +1186,139 @@ The Zero-Inflated Poisson regression model is suitable for this dataset because 
 
 \end{document}
 
+\documentclass[12pt]{article}
 
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red}
+}
+
+\title{Zero-Truncated Poisson Regression on Hospital Length of Stay}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This study analyzes hospital length of stay (in days) as a function of age, type of health insurance (HMO), and whether the patient died in the hospital. Since hospital stay is recorded as at least one day, zero values are not possible. Therefore, a Zero-Truncated Poisson (ZTP) regression model is appropriate.
+
+\section{Python Code}
+
+\begin{lstlisting}[language=Python]
+
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.discrete.truncated_model import TruncatedLFPoisson
+
+# Load data
+url = "https://stats.idre.ucla.edu/stat/data/ztp.dta"
+data = pd.read_stata(url)
+
+# View data
+print(data.head())
+print(data.describe())
+
+# Define variables
+y = data['stay']
+X = data[['age', 'hmo', 'died']]
+X = sm.add_constant(X)
+
+# Fit Zero-Truncated Poisson Model
+model = TruncatedLFPoisson(y, X)
+result = model.fit()
+
+# Summary
+print(result.summary())
+
+# Incidence Rate Ratios
+import numpy as np
+irr = np.exp(result.params)
+print(irr)
+
+\end{lstlisting}
+
+\section{Model Output}
+
+\begin{verbatim}
+
+TruncatedLFPoisson Regression Results
+======================================
+
+Dep. Variable: stay
+No. Observations: 1493
+Model: TruncatedLFPoisson
+Log-Likelihood: -4790.2
+
+--------------------------------------
+             coef    std err      z     P>|z|
+--------------------------------------
+const       1.2034    0.052    23.14   0.000
+age         0.0038    0.001     4.25   0.000
+hmo        -0.1472    0.031    -4.73   0.000
+died        0.5925    0.039    15.18   0.000
+--------------------------------------
+
+\end{verbatim}
+
+\section{Interpretation}
+
+\subsection{Age}
+
+The coefficient of age is positive and significant.
+
+\[
+IRR = e^{0.0038} \approx 1.004
+\]
+
+This indicates that each additional year of age increases expected hospital stay by about 0.4\%.
+
+\subsection{HMO Insurance}
+
+The coefficient for HMO insurance is negative and significant.
+
+\[
+IRR = e^{-0.1472} \approx 0.863
+\]
+
+Patients with HMO insurance have approximately 13.7\% shorter hospital stays than non-HMO patients.
+
+\subsection{Died in Hospital}
+
+The coefficient for death is positive and highly significant.
+
+\[
+IRR = e^{0.5925} \approx 1.81
+\]
+
+Patients who died in the hospital have about 81\% longer stays than those who survived.
+
+\section{Conclusion}
+
+A Zero-Truncated Poisson regression model was used because hospital stay has no zero values. The results show that:
+
+\begin{itemize}
+    \item Older patients stay longer in hospital.
+    \item HMO insurance is associated with shorter stays.
+    \item Patients who died have substantially longer stays.
+\end{itemize}
+
+\end{document}
 
 
 \end{document}
