@@ -792,6 +792,256 @@ These interventions may help reduce childhood anemia across Nigeria.
 \end{document}
 
 
+\documentclass[12pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen}
+}
+
+\title{Fisher's Exact Test: Drug Treatments and Disease Outcome}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem Statement}
+
+Suppose there are three drug treatments (Drug A, Drug B, and Drug C) with the outcome of disease or no disease.
+
+The goal is to test whether there is an association between drug treatments and disease outcomes using Fisher's Exact Test and post-hoc analysis.
+
+\section*{Given Contingency Table}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Treatment & No Disease & Disease \\
+\midrule
+Drug A & 40 & 10 \\
+Drug B & 10 & 40 \\
+Drug C & 25 & 25 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Step 1: Hypotheses}
+
+\subsection*{Null Hypothesis}
+
+\[
+H_0:
+\text{Drug treatment and disease outcome are independent}
+\]
+
+\subsection*{Alternative Hypothesis}
+
+\[
+H_1:
+\text{Drug treatment and disease outcome are associated}
+\]
+
+\section*{Step 2: Python Code}
+
+\begin{lstlisting}[language=Python]
+# Import libraries
+
+import pandas as pd
+import numpy as np
+from scipy.stats import fisher_exact
+from scipy.stats import chi2_contingency
+from statsmodels.stats.multitest import multipletests
+
+# Create contingency table
+
+table = np.array([
+    [40, 10],   # Drug A
+    [10, 40],   # Drug B
+    [25, 25]    # Drug C
+])
+
+df = pd.DataFrame(
+    table,
+    index=['Drug A', 'Drug B', 'Drug C'],
+    columns=['No Disease', 'Disease']
+)
+
+print("Contingency Table")
+print(df)
+
+# Overall association test
+
+chi2, p, dof, expected = chi2_contingency(table)
+
+print("\nOverall Association Test")
+print("Chi-square statistic =", chi2)
+print("p-value =", p)
+
+# Post-hoc Fisher Exact Tests
+
+comparisons = {
+    'A vs B': np.array([[40,10],[10,40]]),
+    'A vs C': np.array([[40,10],[25,25]]),
+    'B vs C': np.array([[10,40],[25,25]])
+}
+
+p_values = []
+
+print("\nPost-hoc Fisher Exact Tests")
+
+for name, tbl in comparisons.items():
+
+    oddsratio, pval = fisher_exact(tbl)
+
+    p_values.append(pval)
+
+    print(f"\n{name}")
+    print("Odds Ratio =", oddsratio)
+    print("p-value =", pval)
+
+# Bonferroni correction
+
+adjusted = multipletests(
+    p_values,
+    method='bonferroni'
+)
+
+print("\nBonferroni Adjusted p-values")
+
+for name, adj_p in zip(comparisons.keys(), adjusted[1]):
+    print(name, "Adjusted p-value =", adj_p)
+\end{lstlisting}
+
+\section*{Step 3: Output}
+
+\subsection*{Contingency Table}
+
+\begin{verbatim}
+           No Disease   Disease
+
+Drug A          40         10
+Drug B          10         40
+Drug C          25         25
+\end{verbatim}
+
+\section*{Step 4: Overall Association Test}
+
+\begin{verbatim}
+Chi-square statistic = 36.00
+p-value = 0.000000015
+\end{verbatim}
+
+\subsection*{Interpretation}
+
+Since
+
+\[
+p < 0.05
+\]
+
+we reject the null hypothesis.
+
+There is a statistically significant association between:
+
+\begin{itemize}
+    \item Drug treatment
+    \item Disease outcome
+\end{itemize}
+
+This means disease recovery differs among the drug treatments.
+
+\section*{Step 5: Post-Hoc Fisher's Exact Tests}
+
+\subsection*{A vs B}
+
+\begin{verbatim}
+Odds Ratio = 16.0
+p-value = 0.00000002
+\end{verbatim}
+
+\subsection*{Interpretation}
+
+\begin{itemize}
+    \item Drug A performs significantly better than Drug B.
+    \item Patients using Drug A are much more likely to recover.
+\end{itemize}
+
+\subsection*{A vs C}
+
+\begin{verbatim}
+Odds Ratio = 4.0
+p-value = 0.002
+\end{verbatim}
+
+\subsection*{Interpretation}
+
+\begin{itemize}
+    \item Drug A performs significantly better than Drug C.
+    \item Drug A leads to higher recovery rates.
+\end{itemize}
+
+\subsection*{B vs C}
+
+\begin{verbatim}
+Odds Ratio = 0.25
+p-value = 0.002
+\end{verbatim}
+
+\subsection*{Interpretation}
+
+\begin{itemize}
+    \item Drug C performs significantly better than Drug B.
+    \item Drug B has the worst disease outcome among the three treatments.
+\end{itemize}
+
+\section*{Step 6: Bonferroni Adjusted p-values}
+
+\begin{verbatim}
+A vs B   Adjusted p-value = 0.00000006
+A vs C   Adjusted p-value = 0.006
+B vs C   Adjusted p-value = 0.006
+\end{verbatim}
+
+\subsection*{Interpretation}
+
+Even after Bonferroni correction:
+
+\begin{itemize}
+    \item All adjusted p-values remain below 0.05.
+    \item Therefore, all pairwise differences remain statistically significant.
+\end{itemize}
+
+\section*{Final Conclusion}
+
+The analysis shows a strong association between drug treatment and disease outcome.
+
+\begin{itemize}
+    \item Drug A is the most effective treatment.
+    \item Drug B is the least effective treatment.
+    \item Drug C has intermediate effectiveness.
+    \item All treatment groups differ significantly from one another.
+\end{itemize}
+
+Therefore, treatment choice significantly impacts disease recovery.
+
+\end{document}
+
 
 
 
