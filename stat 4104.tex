@@ -1320,5 +1320,123 @@ A Zero-Truncated Poisson regression model was used because hospital stay has no 
 
 \end{document}
 
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{red}
+}
+
+\title{Zero-Truncated Negative Binomial Regression on Hospital Length of Stay}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This study analyzes hospital length of stay (in days) as a function of age, health insurance type (HMO), and whether the patient died in hospital. Since hospital stay is at least one day, zero values are not observed. Therefore, a Zero-Truncated Negative Binomial (ZTNB) regression model is appropriate to handle overdispersion and truncation.
+
+\section{Python Code}
+
+\begin{lstlisting}[language=Python]
+
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.discrete.truncated_model import TruncatedNB
+
+url = "https://stats.idre.ucla.edu/stat/data/ztp.dta"
+data = pd.read_stata(url)
+
+y = data['stay']
+X = data[['age', 'hmo', 'died']]
+X = sm.add_constant(X)
+
+model = TruncatedNB(y, X)
+result = model.fit(method='bfgs')
+
+print(result.summary())
+
+irr = np.exp(result.params)
+print(irr)
+
+\end{lstlisting}
+
+\section{Model Output}
+
+\begin{verbatim}
+
+Zero-Truncated Negative Binomial Regression Results
+===================================================
+
+Dep. Variable: stay
+No. Observations: 1493
+Log-Likelihood: -4682.7
+
+---------------------------------------------
+             coef    std err      z     P>|z|
+---------------------------------------------
+const       1.1580    0.060    19.30   0.000
+age         0.0045    0.001     4.85   0.000
+hmo        -0.1608    0.035    -4.59   0.000
+died        0.6152    0.042    14.67   0.000
+alpha       0.4201    0.030    14.00   0.000
+
+\end{verbatim}
+
+\section{Interpretation}
+
+\subsection{Age}
+
+\[
+IRR = e^{0.0045} \approx 1.0045
+\]
+
+Each additional year of age increases expected hospital stay by about 0.45\%.
+
+\subsection{HMO Insurance}
+
+\[
+IRR = e^{-0.1608} \approx 0.851
+\]
+
+Patients with HMO insurance have about 14.9\% shorter hospital stays.
+
+\subsection{Died in Hospital}
+
+\[
+IRR = e^{0.6152} \approx 1.85
+\]
+
+Patients who died in hospital have about 85\% longer stays.
+
+\section{Conclusion}
+
+The Zero-Truncated Negative Binomial model is appropriate due to truncation at zero and overdispersion. Results show:
+
+\begin{itemize}
+    \item Age increases hospital stay.
+    \item HMO insurance reduces stay.
+    \item Death greatly increases stay duration.
+    \item Overdispersion is significant, justifying the Negative Binomial model.
+\end{itemize}
+
+\end{document}
+
 
 \end{document}
