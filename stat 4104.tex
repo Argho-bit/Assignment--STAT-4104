@@ -1,3 +1,4 @@
+
 \documentclass[12pt]{article}
 
 \usepackage[a4paper, margin=1in]{geometry}
@@ -93,11 +94,13 @@
 \pagestyle{plain}
 
 %% =============== SECTION 1: LUNG DISEASE DATASET ===============
-
 \begin{center}
-    {\LARGE \textbf{Lung Disease Dataset Analysis using Python}}\\[0.3cm]
-    {\large STAT-4104: Categorical Data Analysis}
+    {\LARGE \textbf{ problem 1}}\\[0.3cm]
+    {\large Lung Disease Dataset Analysis using Python}
 \end{center}
+
+
+
 
 \section*{1. Import Libraries and Dataset}
 
@@ -418,10 +421,13 @@ Specificity = 0.661
 \newpage
 
 %% =============== SECTION 2: ONE-WAY ANOVA ===============
-
 \begin{center}
-    {\LARGE \textbf{One-Way ANOVA: Exercise Programs and Weight Loss}}
+    {\LARGE \textbf{ problem 2}}\\[0.3cm]
+    {\large One-Way ANOVA: Exercise Programs and Weight Loss}
 \end{center}
+
+
+
 
 \section*{Problem Statement}
 
@@ -595,8 +601,11 @@ Therefore, the choice of exercise program has a meaningful impact on weight loss
 %% =============== SECTION 3: CHI-SQUARE - NIGERIA ANEMIA ===============
 
 \begin{center}
-    {\LARGE \textbf{Chi-Square Analysis on Nigeria Child Anemia Dataset}}
+    {\LARGE \textbf{ problem 3}}\\[0.3cm]
+    {\large Chi-Square Analysis on Nigeria Child Anemia Dataset}
 \end{center}
+
+
 
 \section*{Dataset Description}
 
@@ -719,10 +728,13 @@ There is a statistically significant association between Mother's education leve
 \newpage
 
 %% =============== SECTION 4: FISHER'S EXACT TEST ===============
-
 \begin{center}
-    {\LARGE \textbf{Fisher's Exact Test: Drug Treatments and Disease Outcome}}
+    {\LARGE \textbf{ problem 4}}\\[0.3cm]
+    {\large Fisher's Exact Test: Drug Treatments and Disease Outcome}
 \end{center}
+
+
+
 
 \section*{Problem Statement}
 
@@ -848,13 +860,160 @@ All adjusted p-values remain below 0.05, so all pairwise differences remain stat
     \item All treatment groups differ significantly from one another.
 \end{itemize}
 
+
+\newpage
+
+\section*{Problem 5: Logistic Regression GLM}
+
+Dataset:
+https://stats.idre.ucla.edu/stat/data/binary.csv
+
+\subsection*{Python Code}
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+url = "https://stats.idre.ucla.edu/stat/data/binary.csv"
+df = pd.read_csv(url)
+
+df['rank'] = df['rank'].astype('category')
+
+model = smf.glm(
+    formula='admit ~ gre + gpa + C(rank)',
+    data=df,
+    family=sm.families.Binomial()
+).fit()
+
+print(model.summary())
+\end{lstlisting}
+
+\subsection*{Interpretation}
+
+GRE and GPA positively and significantly affect admission.
+Students from lower-ranked institutions have lower admission chances.
+
+\newpage
+
+\section*{Problem 6: Poisson Regression GLM}
+
+Dataset:
+https://stats.idre.ucla.edu/stat/data/poisson_sim.csv
+
+\subsection*{Python Code}
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+url = "https://stats.idre.ucla.edu/stat/data/poisson_sim.csv"
+df = pd.read_csv(url)
+
+df['prog'] = df['prog'].astype('category')
+
+model = smf.glm(
+    formula='num_awards ~ math + C(prog)',
+    data=df,
+    family=sm.families.Poisson()
+).fit()
+
+print(model.summary())
+\end{lstlisting}
+
+\subsection*{Interpretation}
+
+Math score positively affects awards earned.
+Academic program students earn more awards than other groups.
+
+\newpage
+
+\section*{Problem 7: Negative Binomial Regression GLM}
+
+Dataset:
+https://stats.idre.ucla.edu/stat/stata/dae/nb_data.dta
+
+\subsection*{Python Code}
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+url = "https://stats.idre.ucla.edu/stat/stata/dae/nb_data.dta"
+df = pd.read_stata(url)
+
+df['prog'] = df['prog'].astype('category')
+
+model = smf.glm(
+    formula='daysabs ~ math + C(prog)',
+    data=df,
+    family=sm.families.NegativeBinomial()
+).fit()
+
+print(model.summary())
+\end{lstlisting}
+
+\subsection*{Interpretation}
+
+Higher math scores reduce absenteeism.
+General and vocational students show more absences.
+
+\newpage
+
+\section*{Problem 8: Zero-Inflated Poisson Regression}
+
+Dataset:
+https://stats.idre.ucla.edu/stat/data/fish.csv
+
+\subsection*{Python Code}
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.discrete.count_model import ZeroInflatedPoisson
+
+url = "https://stats.idre.ucla.edu/stat/data/fish.csv"
+df = pd.read_csv(url)
+
+X = df[['persons', 'child', 'camper']]
+X = sm.add_constant(X)
+
+y = df['count']
+
+zip_model = ZeroInflatedPoisson(
+    endog=y,
+    exog=X,
+    exog_infl=X,
+    inflation='logit'
+).fit()
+
+print(zip_model.summary())
+\end{lstlisting}
+
+\subsection*{Interpretation}
+
+Group size and camping increase fish catch counts.
+Groups with children are more likely to produce excess zeros.
+
+
+
+
+
+
+
+
 \newpage
 
 %% =============== SECTION 5: ZERO-INFLATED POISSON ===============
-
 \begin{center}
-    {\LARGE \textbf{Zero-Inflated Poisson Regression on Fish Catch Data}}
+    {\LARGE \textbf{ problem 9}}\\[0.3cm]
+    {\large Zero-Inflated Poisson Regression on Fish Catch Data}
 \end{center}
+
+
+
 
 \section*{Introduction}
 
@@ -938,10 +1097,13 @@ The ZIP model is suitable due to excess zero counts. Larger groups and campers t
 \newpage
 
 %% =============== SECTION 6: ZERO-TRUNCATED POISSON ===============
-
 \begin{center}
-    {\LARGE \textbf{Zero-Truncated Poisson Regression on Hospital Length of Stay}}
+    {\LARGE \textbf{ problem 10}}\\[0.3cm]
+    {\large Zero-Truncated Poisson Regression on Hospital Length of Stay }
 \end{center}
+
+
+
 
 \section*{Introduction}
 
@@ -1015,8 +1177,12 @@ Patients who died in the hospital have about 81\% longer stays.
 %% =============== SECTION 7: ZERO-TRUNCATED NEGATIVE BINOMIAL ===============
 
 \begin{center}
-    {\LARGE \textbf{Zero-Truncated Negative Binomial Regression on Hospital Length of Stay}}
+    {\LARGE \textbf{ problem 11}}\\[0.3cm]
+    {\large Zero-Truncated Negative Binomial Regression on Hospital Length of Stay }
 \end{center}
+
+
+
 
 \section*{Introduction}
 
@@ -1086,3 +1252,5 @@ Patients who died in hospital have about 85\% longer stays.
 \end{itemize}
 
 \end{document}
+
+
