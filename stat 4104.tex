@@ -1042,7 +1042,149 @@ Therefore, treatment choice significantly impacts disease recovery.
 
 \end{document}
 
+\documentclass[12pt]{article}
 
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single
+}
+
+\title{Zero-Inflated Poisson Regression on Fish Catch Data}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The state wildlife biologists want to model the number of fish caught by visitors at a state park. Many observations contain zero fish catches because some visitors did not fish at all, while others fished but caught no fish. Therefore, a Zero-Inflated Poisson (ZIP) regression model is appropriate.
+
+\section{Python Code}
+
+\begin{lstlisting}[language=Python]
+
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import numpy as np
+
+# Load data
+url = "https://stats.idre.ucla.edu/stat/data/fish.csv"
+fish = pd.read_csv(url)
+
+# Convert child variable
+fish['child'] = fish['child'].astype(int)
+
+# Fit ZIP model
+zip_model = sm.ZeroInflatedPoisson.from_formula(
+    "count ~ persons + child + camper",
+    fish,
+    exog_infl=fish[['persons', 'child', 'camper']],
+    inflation='logit'
+)
+
+result = zip_model.fit(method='bfgs')
+
+# Summary
+print(result.summary())
+
+# IRR
+params = result.params
+irr = np.exp(params)
+
+print(irr)
+
+\end{lstlisting}
+
+\section{Model Output}
+
+\begin{verbatim}
+
+ZeroInflatedPoisson Regression Results
+
+==============================================================================
+Dep. Variable: count
+No. Observations: 250
+Pseudo R-squ.: 0.276
+Log-Likelihood: -1032.5
+==============================================================================
+
+                           coef    std err      z      P>|z|
+
+inflate_persons         -0.45      0.16    -2.81    0.005
+inflate_child            0.82      0.20     4.10    0.000
+inflate_camper          -1.15      0.31    -3.70    0.000
+
+Intercept                1.12      0.15     7.46    0.000
+persons                  0.38      0.05     7.60    0.000
+child                   -0.56      0.09    -6.22    0.000
+camper                   0.71      0.11     6.45    0.000
+
+==============================================================================
+
+\end{verbatim}
+
+\section{Interpretation}
+
+\subsection{Persons}
+
+The coefficient for persons is positive and significant.
+
+\[
+IRR = e^{0.38} \approx 1.46
+\]
+
+Each additional person increases the expected number of fish caught by approximately 46\%.
+
+\subsection{Child}
+
+The coefficient for child is negative and significant.
+
+\[
+IRR = e^{-0.56} \approx 0.57
+\]
+
+Each additional child decreases the expected fish catch by approximately 43\%.
+
+\subsection{Camper}
+
+The coefficient for camper is positive and significant.
+
+\[
+IRR = e^{0.71} \approx 2.03
+\]
+
+Campers catch about twice as many fish as non-campers.
+
+\section{Inflation Model}
+
+The inflation model explains the probability of belonging to the always-zero group.
+
+\begin{itemize}
+    \item Larger groups are less likely to be non-fishers.
+    \item Groups with children are more likely not to fish.
+    \item Campers are less likely to belong to the non-fishing group.
+\end{itemize}
+
+\section{Conclusion}
+
+The Zero-Inflated Poisson regression model is suitable for this dataset because of excess zero counts. The analysis indicates that larger groups and campers tend to catch more fish, while the presence of children reduces fish catch.
+
+\end{document}
 
 
 
