@@ -1,24 +1,103 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[12pt]{article}
 
-\title{Assignment : STAT 4104}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
 
-\author{Argho Kundu -id 63}
-\date{May 2026}
+% Define colors
+\definecolor{lightblue}{RGB}{176,196,222}
+\definecolor{darkslate}{RGB}{70,90,110}
+\definecolor{steelblue}{RGB}{70,130,180}
+\definecolor{footerblue}{RGB}{70,100,150}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen},
+    stringstyle=\color{red}
+}
 
 \begin{document}
 
-\maketitle
+%% ===================== COVER PAGE =====================
+\pagestyle{empty}
 
-\section{Introduction}
+\begin{tikzpicture}[remember picture, overlay]
+    % Full page light blue background
+    \fill[lightblue!60] (current page.south west) rectangle (current page.north east);
 
-\title{Lung Disease Dataset Analysis using Python}
-\author{STAT 4104: Categorical Data Analysis}
-\date{}
+    % Right white panel
+    \fill[white] ([xshift=0.52\paperwidth]current page.south west)
+        rectangle (current page.north east);
 
-\begin{document}
+    % Dark title box (top right)
+    \fill[darkslate] ([xshift=0.52\paperwidth, yshift=-0.02\paperheight]current page.north west)
+        rectangle ([xshift=0.95\paperwidth, yshift=-0.38\paperheight]current page.north west);
 
-\maketitle
+    % Title text inside dark box
+    \node[anchor=center, text=white, font=\large]
+        at ([xshift=0.735\paperwidth, yshift=-0.20\paperheight]current page.north west)
+        {Assignment- \textsc{Using} python};
+
+    % Footer bar
+    \fill[footerblue] (current page.south west)
+        rectangle ([xshift=\paperwidth, yshift=0.045\paperheight]current page.south west);
+
+    % Footer text
+    \node[anchor=center, text=white, font=\small]
+        at ([yshift=0.022\paperheight]current page.south)
+        {ARGHO:ID-12110063};
+\end{tikzpicture}
+
+\vspace*{4.5cm}
+
+\begin{minipage}[t]{0.48\textwidth}
+    \textbf{\large Submitted by :} \quad \textbf{\underline{Argho Kundu.}}\\[0.4cm]
+    \hspace{1.5cm} ID: \hspace{1.3cm} 12110063.\\[0.3cm]
+    \hspace{1.5cm} Session \; : \; 2021-2022.\\[0.3cm]
+    \hspace{1.5cm} Year: \hspace{1.1cm} 4\textsuperscript{th} year .\\[0.3cm]
+    \hspace{1.5cm} Semester: \; 1\textsuperscript{st} semester.
+
+    \vspace{1.5cm}
+
+    \textbf{\large Submitted to :} \quad \underline{Siddikur} Rahman\\[0.3cm]
+    \hspace{3.0cm} ( \underline{Associate} \; Professor)\\[0.5cm]
+    \textbf{Department of Statistics, Begum Rokeya University ,Rangpur.}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.44\textwidth}
+    \vspace{5.5cm}
+
+    \textcolor{steelblue}{\textbf{Course Title:}}\\[0.2cm]
+    \hspace{0.8cm} \textbf{Categorical Data Analysis}\\[0.5cm]
+    \textcolor{steelblue}{\textbf{Course Code:}}\\[0.2cm]
+    \hspace{0.8cm} \underline{STAT-4104}
+\end{minipage}
+
+\vfill
+\hfill \small MSI
+
+\newpage
+\pagestyle{plain}
+
+%% =============== SECTION 1: LUNG DISEASE DATASET ===============
+
+\begin{center}
+    {\LARGE \textbf{Lung Disease Dataset Analysis using Python}}\\[0.3cm]
+    {\large STAT-4104: Categorical Data Analysis}
+\end{center}
 
 \section*{1. Import Libraries and Dataset}
 
@@ -336,18 +415,13 @@ Specificity = 0.661
 \item Public health policies should focus on smoking prevention and pollution control.
 \end{itemize}
 
+\newpage
 
+%% =============== SECTION 2: ONE-WAY ANOVA ===============
 
-
-
-
-\title{One-Way ANOVA: Exercise Programs and Weight Loss}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
+\begin{center}
+    {\LARGE \textbf{One-Way ANOVA: Exercise Programs and Weight Loss}}
+\end{center}
 
 \section*{Problem Statement}
 
@@ -363,8 +437,6 @@ The goal is to conduct a one-way ANOVA, check model assumptions, and analyze tre
 \section*{Step 1: Python Code}
 
 \begin{lstlisting}[language=Python]
-# Import libraries
-
 import numpy as np
 import pandas as pd
 from scipy.stats import f_oneway, shapiro, levene
@@ -372,71 +444,43 @@ from statsmodels.formula.api import ols
 import statsmodels.api as sm
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-# For reproducibility
 np.random.seed(10)
-
-# Generate data
 
 program_A = np.random.normal(loc=5, scale=1.5, size=30)
 program_B = np.random.normal(loc=7, scale=1.5, size=30)
 program_C = np.random.normal(loc=9, scale=1.5, size=30)
-
-# Create dataframe
 
 df = pd.DataFrame({
     'WeightLoss': np.concatenate([program_A, program_B, program_C]),
     'Program': ['A']*30 + ['B']*30 + ['C']*30
 })
 
-# Display first few rows
-
 print(df.head())
-
-# Descriptive statistics
-
 print(df.groupby('Program')['WeightLoss'].describe())
 
-# One-Way ANOVA
-
 anova_result = f_oneway(program_A, program_B, program_C)
-
 print("\nANOVA Result")
 print(anova_result)
 
-# Fit ANOVA model
-
 model = ols('WeightLoss ~ C(Program)', data=df).fit()
-
 anova_table = sm.stats.anova_lm(model, typ=2)
-
 print("\nANOVA Table")
 print(anova_table)
 
-# Assumption Checking
-
-# Normality test
-
 print("\nShapiro-Wilk Test")
-
 for group in ['A', 'B', 'C']:
     stat, p = shapiro(df[df['Program']==group]['WeightLoss'])
     print(group, "p-value =", p)
 
-# Homogeneity of variance
-
 levene_test = levene(program_A, program_B, program_C)
-
 print("\nLevene Test")
 print(levene_test)
-
-# Tukey HSD Test
 
 tukey = pairwise_tukeyhsd(
     endog=df['WeightLoss'],
     groups=df['Program'],
     alpha=0.05
 )
-
 print("\nTukey HSD Result")
 print(tukey)
 \end{lstlisting}
@@ -480,15 +524,7 @@ Residual & 171.67 & 87 & & \\
 
 \subsection*{Interpretation}
 
-Since
-
-\[
-p < 0.05
-\]
-
-we reject the null hypothesis.
-
-There is a statistically significant difference in mean weight loss among the three exercise programs.
+Since $p < 0.05$, we reject the null hypothesis. There is a statistically significant difference in mean weight loss among the three exercise programs.
 
 \section*{Step 3: Assumption Checking}
 
@@ -554,157 +590,77 @@ The one-way ANOVA analysis indicates that exercise program significantly affects
 
 Therefore, the choice of exercise program has a meaningful impact on weight loss.
 
-\end{document}
+\newpage
 
+%% =============== SECTION 3: CHI-SQUARE - NIGERIA ANEMIA ===============
 
-\documentclass[12pt]{article}
-
-\usepackage[a4paper, margin=1in]{geometry}
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{xcolor}
-\usepackage{listings}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-
-\lstset{
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    numbers=left,
-    numberstyle=\tiny\color{codegray},
-    keywordstyle=\color{blue},
-    commentstyle=\color{codegreen}
-}
-
-\title{Chi-Square Analysis on Nigeria Child Anemia Dataset}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
+\begin{center}
+    {\LARGE \textbf{Chi-Square Analysis on Nigeria Child Anemia Dataset}}
+\end{center}
 
 \section*{Dataset Description}
 
-Dataset Source:
-
-\texttt{https://www.kaggle.com/datasets/adeolaadesina/factors-affecting-children-anemia-level/data}
+Dataset Source: \texttt{https://www.kaggle.com/datasets/adeolaadesina/factors-affecting-children-anemia-level/data}
 
 The dataset comes from the 2018 Nigeria Demographic and Health Surveys (NDHS). It investigates factors affecting anemia levels among children aged 0--59 months in Nigeria.
 
 \section*{Objective}
 
-To determine whether there is a statistically significant association between:
-
-\begin{itemize}
-    \item Mother's Education Level
-    \item Child Anemia Level
-\end{itemize}
-
-using:
-
-\begin{itemize}
-    \item Contingency Table
-    \item Chi-Square Test
-    \item Contribution Diagram
-    \item Interpretation
-\end{itemize}
+To determine whether there is a statistically significant association between Mother's Education Level and Child Anemia Level using a Contingency Table, Chi-Square Test, Contribution Diagram, and Interpretation.
 
 \section*{Step 1: Python Code}
 
 \begin{lstlisting}[language=Python]
-# Import libraries
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 from scipy.stats import chi2_contingency
 
-# Load dataset
-
 df = pd.read_csv("Nigeria_Anemia_Data.csv")
-
-# Display first rows
-
 print(df.head())
-
-# Select variables
-
 print(df.columns)
-
-# Create contingency table
 
 ct = pd.crosstab(
     df['Mother_Education'],
     df['Anemia_Level']
 )
-
 print("\nContingency Table")
 print(ct)
 
-# Chi-Square Test
-
 chi2, p, dof, expected = chi2_contingency(ct)
-
 print("\nChi-Square Test Results")
 print("Chi-square statistic =", chi2)
 print("Degrees of freedom =", dof)
 print("p-value =", p)
-
-# Expected Frequencies
 
 expected_df = pd.DataFrame(
     expected,
     index=ct.index,
     columns=ct.columns
 )
-
 print("\nExpected Frequencies")
 print(expected_df)
 
-# Contribution Matrix
-
 contribution = ((ct - expected_df)**2) / expected_df
-
 print("\nContribution Matrix")
 print(contribution)
 
-# Contribution Diagram
-
 plt.figure(figsize=(10,6))
-
-sns.heatmap(
-    contribution,
-    annot=True,
-    cmap='Reds',
-    fmt='.2f'
-)
-
+sns.heatmap(contribution, annot=True, cmap='Reds', fmt='.2f')
 plt.title("Chi-Square Contribution Diagram")
 plt.xlabel("Anemia Level")
 plt.ylabel("Mother Education")
-
 plt.show()
 \end{lstlisting}
 
 \section*{Step 2: Hypotheses}
 
-\subsection*{Null Hypothesis}
-
 \[
-H_0:
-\text{Mother's education and child anemia level are independent}
+H_0: \text{Mother's education and child anemia level are independent}
 \]
-
-\subsection*{Alternative Hypothesis}
-
 \[
-H_1:
-\text{Mother's education and child anemia level are associated}
+H_1: \text{Mother's education and child anemia level are associated}
 \]
 
 \section*{Step 3: Contingency Table}
@@ -728,36 +684,13 @@ p-value = 0.00000000001
 
 \section*{Step 5: Decision Rule}
 
-Since
-
-\[
-p < 0.05
-\]
-
-we reject the null hypothesis.
+Since $p < 0.05$, we reject the null hypothesis.
 
 \section*{Step 6: Interpretation of Chi-Square Test}
 
-There is a statistically significant association between:
-
-\begin{itemize}
-    \item Mother's education level
-    \item Child anemia level
-\end{itemize}
-
-This means anemia prevalence differs across education groups.
+There is a statistically significant association between Mother's education level and Child anemia level. This means anemia prevalence differs across education groups.
 
 \section*{Step 7: Contribution Diagram Interpretation}
-
-The contribution diagram identifies which cells contribute most to the chi-square statistic.
-
-Large contribution values indicate combinations where:
-
-\[
-Observed \neq Expected
-\]
-
-\subsection*{Interpretation}
 
 \begin{itemize}
     \item Children of mothers with no education contribute heavily to severe anemia cases.
@@ -767,8 +700,6 @@ Observed \neq Expected
 
 \section*{Step 8: Overall Findings}
 
-The analysis suggests:
-
 \begin{itemize}
     \item Lower maternal education is associated with higher levels of child anemia.
     \item Higher maternal education is associated with lower anemia prevalence.
@@ -776,8 +707,6 @@ The analysis suggests:
 \end{itemize}
 
 \section*{Public Health Implications}
-
-The findings indicate the need for:
 
 \begin{itemize}
     \item Maternal education programs
@@ -787,45 +716,17 @@ The findings indicate the need for:
     \item Poverty reduction interventions
 \end{itemize}
 
-These interventions may help reduce childhood anemia across Nigeria.
+\newpage
 
-\end{document}
+%% =============== SECTION 4: FISHER'S EXACT TEST ===============
 
-
-\documentclass[12pt]{article}
-
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{xcolor}
-\usepackage{listings}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-
-\lstset{
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    numbers=left,
-    numberstyle=\tiny\color{codegray},
-    keywordstyle=\color{blue},
-    commentstyle=\color{codegreen}
-}
-
-\title{Fisher's Exact Test: Drug Treatments and Disease Outcome}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
+\begin{center}
+    {\LARGE \textbf{Fisher's Exact Test: Drug Treatments and Disease Outcome}}
+\end{center}
 
 \section*{Problem Statement}
 
-Suppose there are three drug treatments (Drug A, Drug B, and Drug C) with the outcome of disease or no disease.
-
-The goal is to test whether there is an association between drug treatments and disease outcomes using Fisher's Exact Test and post-hoc analysis.
+Suppose there are three drug treatments (Drug A, Drug B, and Drug C) with the outcome of disease or no disease. The goal is to test whether there is an association between drug treatments and disease outcomes using Fisher's Exact Test and post-hoc analysis.
 
 \section*{Given Contingency Table}
 
@@ -843,37 +744,26 @@ Drug C & 25 & 25 \\
 
 \section*{Step 1: Hypotheses}
 
-\subsection*{Null Hypothesis}
-
 \[
-H_0:
-\text{Drug treatment and disease outcome are independent}
+H_0: \text{Drug treatment and disease outcome are independent}
 \]
-
-\subsection*{Alternative Hypothesis}
-
 \[
-H_1:
-\text{Drug treatment and disease outcome are associated}
+H_1: \text{Drug treatment and disease outcome are associated}
 \]
 
 \section*{Step 2: Python Code}
 
 \begin{lstlisting}[language=Python]
-# Import libraries
-
 import pandas as pd
 import numpy as np
 from scipy.stats import fisher_exact
 from scipy.stats import chi2_contingency
 from statsmodels.stats.multitest import multipletests
 
-# Create contingency table
-
 table = np.array([
-    [40, 10],   # Drug A
-    [10, 40],   # Drug B
-    [25, 25]    # Drug C
+    [40, 10],
+    [10, 40],
+    [25, 25]
 ])
 
 df = pd.DataFrame(
@@ -881,19 +771,13 @@ df = pd.DataFrame(
     index=['Drug A', 'Drug B', 'Drug C'],
     columns=['No Disease', 'Disease']
 )
-
 print("Contingency Table")
 print(df)
 
-# Overall association test
-
 chi2, p, dof, expected = chi2_contingency(table)
-
 print("\nOverall Association Test")
 print("Chi-square statistic =", chi2)
 print("p-value =", p)
-
-# Post-hoc Fisher Exact Tests
 
 comparisons = {
     'A vs B': np.array([[40,10],[10,40]]),
@@ -902,115 +786,50 @@ comparisons = {
 }
 
 p_values = []
-
 print("\nPost-hoc Fisher Exact Tests")
-
 for name, tbl in comparisons.items():
-
     oddsratio, pval = fisher_exact(tbl)
-
     p_values.append(pval)
-
     print(f"\n{name}")
     print("Odds Ratio =", oddsratio)
     print("p-value =", pval)
 
-# Bonferroni correction
-
-adjusted = multipletests(
-    p_values,
-    method='bonferroni'
-)
-
+adjusted = multipletests(p_values, method='bonferroni')
 print("\nBonferroni Adjusted p-values")
-
 for name, adj_p in zip(comparisons.keys(), adjusted[1]):
     print(name, "Adjusted p-value =", adj_p)
 \end{lstlisting}
 
-\section*{Step 3: Output}
-
-\subsection*{Contingency Table}
-
-\begin{verbatim}
-           No Disease   Disease
-
-Drug A          40         10
-Drug B          10         40
-Drug C          25         25
-\end{verbatim}
-
-\section*{Step 4: Overall Association Test}
+\section*{Step 3: Overall Association Test}
 
 \begin{verbatim}
 Chi-square statistic = 36.00
 p-value = 0.000000015
 \end{verbatim}
 
-\subsection*{Interpretation}
+Since $p < 0.05$, we reject the null hypothesis. There is a statistically significant association between drug treatment and disease outcome.
 
-Since
-
-\[
-p < 0.05
-\]
-
-we reject the null hypothesis.
-
-There is a statistically significant association between:
-
-\begin{itemize}
-    \item Drug treatment
-    \item Disease outcome
-\end{itemize}
-
-This means disease recovery differs among the drug treatments.
-
-\section*{Step 5: Post-Hoc Fisher's Exact Tests}
+\section*{Step 4: Post-Hoc Fisher's Exact Tests}
 
 \subsection*{A vs B}
-
 \begin{verbatim}
-Odds Ratio = 16.0
-p-value = 0.00000002
+Odds Ratio = 16.0    p-value = 0.00000002
 \end{verbatim}
-
-\subsection*{Interpretation}
-
-\begin{itemize}
-    \item Drug A performs significantly better than Drug B.
-    \item Patients using Drug A are much more likely to recover.
-\end{itemize}
+Drug A performs significantly better than Drug B.
 
 \subsection*{A vs C}
-
 \begin{verbatim}
-Odds Ratio = 4.0
-p-value = 0.002
+Odds Ratio = 4.0     p-value = 0.002
 \end{verbatim}
-
-\subsection*{Interpretation}
-
-\begin{itemize}
-    \item Drug A performs significantly better than Drug C.
-    \item Drug A leads to higher recovery rates.
-\end{itemize}
+Drug A performs significantly better than Drug C.
 
 \subsection*{B vs C}
-
 \begin{verbatim}
-Odds Ratio = 0.25
-p-value = 0.002
+Odds Ratio = 0.25    p-value = 0.002
 \end{verbatim}
+Drug C performs significantly better than Drug B.
 
-\subsection*{Interpretation}
-
-\begin{itemize}
-    \item Drug C performs significantly better than Drug B.
-    \item Drug B has the worst disease outcome among the three treatments.
-\end{itemize}
-
-\section*{Step 6: Bonferroni Adjusted p-values}
+\section*{Step 5: Bonferroni Adjusted p-values}
 
 \begin{verbatim}
 A vs B   Adjusted p-value = 0.00000006
@@ -1018,18 +837,9 @@ A vs C   Adjusted p-value = 0.006
 B vs C   Adjusted p-value = 0.006
 \end{verbatim}
 
-\subsection*{Interpretation}
-
-Even after Bonferroni correction:
-
-\begin{itemize}
-    \item All adjusted p-values remain below 0.05.
-    \item Therefore, all pairwise differences remain statistically significant.
-\end{itemize}
+All adjusted p-values remain below 0.05, so all pairwise differences remain statistically significant.
 
 \section*{Final Conclusion}
-
-The analysis shows a strong association between drug treatment and disease outcome.
 
 \begin{itemize}
     \item Drug A is the most effective treatment.
@@ -1038,90 +848,53 @@ The analysis shows a strong association between drug treatment and disease outco
     \item All treatment groups differ significantly from one another.
 \end{itemize}
 
-Therefore, treatment choice significantly impacts disease recovery.
+\newpage
 
-\end{document}
+%% =============== SECTION 5: ZERO-INFLATED POISSON ===============
 
-\documentclass[12pt]{article}
+\begin{center}
+    {\LARGE \textbf{Zero-Inflated Poisson Regression on Fish Catch Data}}
+\end{center}
 
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{listings}
-\usepackage{xcolor}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-
-\lstset{
-    basicstyle=\ttfamily\small,
-    keywordstyle=\color{blue},
-    commentstyle=\color{codegreen},
-    stringstyle=\color{red},
-    breaklines=true,
-    frame=single
-}
-
-\title{Zero-Inflated Poisson Regression on Fish Catch Data}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
-
-\section{Introduction}
+\section*{Introduction}
 
 The state wildlife biologists want to model the number of fish caught by visitors at a state park. Many observations contain zero fish catches because some visitors did not fish at all, while others fished but caught no fish. Therefore, a Zero-Inflated Poisson (ZIP) regression model is appropriate.
 
-\section{Python Code}
+\section*{Python Code}
 
 \begin{lstlisting}[language=Python]
-
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import numpy as np
 
-# Load data
 url = "https://stats.idre.ucla.edu/stat/data/fish.csv"
 fish = pd.read_csv(url)
-
-# Convert child variable
 fish['child'] = fish['child'].astype(int)
 
-# Fit ZIP model
 zip_model = sm.ZeroInflatedPoisson.from_formula(
     "count ~ persons + child + camper",
     fish,
     exog_infl=fish[['persons', 'child', 'camper']],
     inflation='logit'
 )
-
 result = zip_model.fit(method='bfgs')
-
-# Summary
 print(result.summary())
 
-# IRR
 params = result.params
 irr = np.exp(params)
-
 print(irr)
-
 \end{lstlisting}
 
-\section{Model Output}
+\section*{Model Output}
 
 \begin{verbatim}
-
 ZeroInflatedPoisson Regression Results
-
 ==============================================================================
 Dep. Variable: count
 No. Observations: 250
 Pseudo R-squ.: 0.276
 Log-Likelihood: -1032.5
-==============================================================================
 
                            coef    std err      z      P>|z|
 
@@ -1133,46 +906,24 @@ Intercept                1.12      0.15     7.46    0.000
 persons                  0.38      0.05     7.60    0.000
 child                   -0.56      0.09    -6.22    0.000
 camper                   0.71      0.11     6.45    0.000
-
 ==============================================================================
-
 \end{verbatim}
 
-\section{Interpretation}
+\section*{Interpretation}
 
-\subsection{Persons}
-
-The coefficient for persons is positive and significant.
-
-\[
-IRR = e^{0.38} \approx 1.46
-\]
-
+\subsection*{Persons}
+\[ IRR = e^{0.38} \approx 1.46 \]
 Each additional person increases the expected number of fish caught by approximately 46\%.
 
-\subsection{Child}
-
-The coefficient for child is negative and significant.
-
-\[
-IRR = e^{-0.56} \approx 0.57
-\]
-
+\subsection*{Child}
+\[ IRR = e^{-0.56} \approx 0.57 \]
 Each additional child decreases the expected fish catch by approximately 43\%.
 
-\subsection{Camper}
-
-The coefficient for camper is positive and significant.
-
-\[
-IRR = e^{0.71} \approx 2.03
-\]
-
+\subsection*{Camper}
+\[ IRR = e^{0.71} \approx 2.03 \]
 Campers catch about twice as many fish as non-campers.
 
-\section{Inflation Model}
-
-The inflation model explains the probability of belonging to the always-zero group.
+\section*{Inflation Model}
 
 \begin{itemize}
     \item Larger groups are less likely to be non-fishers.
@@ -1180,137 +931,78 @@ The inflation model explains the probability of belonging to the always-zero gro
     \item Campers are less likely to belong to the non-fishing group.
 \end{itemize}
 
-\section{Conclusion}
+\section*{Conclusion}
 
-The Zero-Inflated Poisson regression model is suitable for this dataset because of excess zero counts. The analysis indicates that larger groups and campers tend to catch more fish, while the presence of children reduces fish catch.
+The ZIP model is suitable due to excess zero counts. Larger groups and campers tend to catch more fish, while the presence of children reduces fish catch.
 
-\end{document}
+\newpage
 
-\documentclass[12pt]{article}
+%% =============== SECTION 6: ZERO-TRUNCATED POISSON ===============
 
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{listings}
-\usepackage{xcolor}
+\begin{center}
+    {\LARGE \textbf{Zero-Truncated Poisson Regression on Hospital Length of Stay}}
+\end{center}
 
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codegreen}{rgb}{0,0.6,0}
+\section*{Introduction}
 
-\lstset{
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{blue},
-    stringstyle=\color{red}
-}
+This study analyzes hospital length of stay (in days) as a function of age, type of health insurance (HMO), and whether the patient died in the hospital. Since hospital stay is at least one day, zero values are not possible. Therefore, a Zero-Truncated Poisson (ZTP) regression model is appropriate.
 
-\title{Zero-Truncated Poisson Regression on Hospital Length of Stay}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
-
-\section{Introduction}
-
-This study analyzes hospital length of stay (in days) as a function of age, type of health insurance (HMO), and whether the patient died in the hospital. Since hospital stay is recorded as at least one day, zero values are not possible. Therefore, a Zero-Truncated Poisson (ZTP) regression model is appropriate.
-
-\section{Python Code}
+\section*{Python Code}
 
 \begin{lstlisting}[language=Python]
-
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 from statsmodels.discrete.truncated_model import TruncatedLFPoisson
 
-# Load data
 url = "https://stats.idre.ucla.edu/stat/data/ztp.dta"
 data = pd.read_stata(url)
-
-# View data
 print(data.head())
 print(data.describe())
 
-# Define variables
 y = data['stay']
 X = data[['age', 'hmo', 'died']]
 X = sm.add_constant(X)
 
-# Fit Zero-Truncated Poisson Model
 model = TruncatedLFPoisson(y, X)
 result = model.fit()
-
-# Summary
 print(result.summary())
 
-# Incidence Rate Ratios
-import numpy as np
 irr = np.exp(result.params)
 print(irr)
-
 \end{lstlisting}
 
-\section{Model Output}
+\section*{Model Output}
 
 \begin{verbatim}
-
 TruncatedLFPoisson Regression Results
 ======================================
-
 Dep. Variable: stay
 No. Observations: 1493
-Model: TruncatedLFPoisson
 Log-Likelihood: -4790.2
 
---------------------------------------
              coef    std err      z     P>|z|
---------------------------------------
 const       1.2034    0.052    23.14   0.000
 age         0.0038    0.001     4.25   0.000
 hmo        -0.1472    0.031    -4.73   0.000
 died        0.5925    0.039    15.18   0.000
---------------------------------------
-
 \end{verbatim}
 
-\section{Interpretation}
+\section*{Interpretation}
 
-\subsection{Age}
+\subsection*{Age}
+\[ IRR = e^{0.0038} \approx 1.004 \]
+Each additional year of age increases expected hospital stay by about 0.4\%.
 
-The coefficient of age is positive and significant.
+\subsection*{HMO Insurance}
+\[ IRR = e^{-0.1472} \approx 0.863 \]
+Patients with HMO insurance have approximately 13.7\% shorter hospital stays.
 
-\[
-IRR = e^{0.0038} \approx 1.004
-\]
+\subsection*{Died in Hospital}
+\[ IRR = e^{0.5925} \approx 1.81 \]
+Patients who died in the hospital have about 81\% longer stays.
 
-This indicates that each additional year of age increases expected hospital stay by about 0.4\%.
-
-\subsection{HMO Insurance}
-
-The coefficient for HMO insurance is negative and significant.
-
-\[
-IRR = e^{-0.1472} \approx 0.863
-\]
-
-Patients with HMO insurance have approximately 13.7\% shorter hospital stays than non-HMO patients.
-
-\subsection{Died in Hospital}
-
-The coefficient for death is positive and highly significant.
-
-\[
-IRR = e^{0.5925} \approx 1.81
-\]
-
-Patients who died in the hospital have about 81\% longer stays than those who survived.
-
-\section{Conclusion}
-
-A Zero-Truncated Poisson regression model was used because hospital stay has no zero values. The results show that:
+\section*{Conclusion}
 
 \begin{itemize}
     \item Older patients stay longer in hospital.
@@ -1318,43 +1010,21 @@ A Zero-Truncated Poisson regression model was used because hospital stay has no 
     \item Patients who died have substantially longer stays.
 \end{itemize}
 
-\end{document}
+\newpage
 
-\documentclass[12pt]{article}
+%% =============== SECTION 7: ZERO-TRUNCATED NEGATIVE BINOMIAL ===============
 
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{listings}
-\usepackage{xcolor}
+\begin{center}
+    {\LARGE \textbf{Zero-Truncated Negative Binomial Regression on Hospital Length of Stay}}
+\end{center}
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\section*{Introduction}
 
-\lstset{
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    keywordstyle=\color{blue},
-    commentstyle=\color{codegreen},
-    stringstyle=\color{red}
-}
+This study analyzes hospital length of stay as a function of age, health insurance type (HMO), and whether the patient died in hospital. Since hospital stay is at least one day, zero values are not observed. Therefore, a Zero-Truncated Negative Binomial (ZTNB) regression model is appropriate to handle overdispersion and truncation.
 
-\title{Zero-Truncated Negative Binomial Regression on Hospital Length of Stay}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
-
-\section{Introduction}
-
-This study analyzes hospital length of stay (in days) as a function of age, health insurance type (HMO), and whether the patient died in hospital. Since hospital stay is at least one day, zero values are not observed. Therefore, a Zero-Truncated Negative Binomial (ZTNB) regression model is appropriate to handle overdispersion and truncation.
-
-\section{Python Code}
+\section*{Python Code}
 
 \begin{lstlisting}[language=Python]
-
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
@@ -1369,65 +1039,44 @@ X = sm.add_constant(X)
 
 model = TruncatedNB(y, X)
 result = model.fit(method='bfgs')
-
 print(result.summary())
 
 irr = np.exp(result.params)
 print(irr)
-
 \end{lstlisting}
 
-\section{Model Output}
+\section*{Model Output}
 
 \begin{verbatim}
-
 Zero-Truncated Negative Binomial Regression Results
 ===================================================
-
 Dep. Variable: stay
 No. Observations: 1493
 Log-Likelihood: -4682.7
 
----------------------------------------------
              coef    std err      z     P>|z|
----------------------------------------------
 const       1.1580    0.060    19.30   0.000
 age         0.0045    0.001     4.85   0.000
 hmo        -0.1608    0.035    -4.59   0.000
 died        0.6152    0.042    14.67   0.000
 alpha       0.4201    0.030    14.00   0.000
-
 \end{verbatim}
 
-\section{Interpretation}
+\section*{Interpretation}
 
-\subsection{Age}
-
-\[
-IRR = e^{0.0045} \approx 1.0045
-\]
-
+\subsection*{Age}
+\[ IRR = e^{0.0045} \approx 1.0045 \]
 Each additional year of age increases expected hospital stay by about 0.45\%.
 
-\subsection{HMO Insurance}
-
-\[
-IRR = e^{-0.1608} \approx 0.851
-\]
-
+\subsection*{HMO Insurance}
+\[ IRR = e^{-0.1608} \approx 0.851 \]
 Patients with HMO insurance have about 14.9\% shorter hospital stays.
 
-\subsection{Died in Hospital}
-
-\[
-IRR = e^{0.6152} \approx 1.85
-\]
-
+\subsection*{Died in Hospital}
+\[ IRR = e^{0.6152} \approx 1.85 \]
 Patients who died in hospital have about 85\% longer stays.
 
-\section{Conclusion}
-
-The Zero-Truncated Negative Binomial model is appropriate due to truncation at zero and overdispersion. Results show:
+\section*{Conclusion}
 
 \begin{itemize}
     \item Age increases hospital stay.
@@ -1435,8 +1084,5 @@ The Zero-Truncated Negative Binomial model is appropriate due to truncation at z
     \item Death greatly increases stay duration.
     \item Overdispersion is significant, justifying the Negative Binomial model.
 \end{itemize}
-
-\end{document}
-
 
 \end{document}
